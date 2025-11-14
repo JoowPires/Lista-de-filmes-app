@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import Rotateste from './rotas/teste.js';
 import moviespopular from './rotas/moviespopular.js'; 
 
 
@@ -20,5 +19,4 @@ app.listen(port, () => {
   console.log(`Aplicativo Express rodando em http://localhost:${port}`);
 });
 
-app.use(Rotateste); 
 app.use(moviespopular);

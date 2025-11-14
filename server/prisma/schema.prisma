@@ -1,0 +1,36 @@
+// 1. Define o 'gerador' do cliente Prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 2. Define a conexão com o banco de dados
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // Lê o .env automaticamente
+}
+
+// 3. Define o modelo de Usuário
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+
+  // Relação: Um usuário pode ter MUITOS filmes na lista
+  // (Esta era a linha com o erro de tipo)
+  listadefilmes WatchlistMovie[]
+} 
+
+// 4. Define o modelo da Watchlist
+model WatchlistMovie {
+  id     String @id @default(cuid())
+  tmdbId Int    // O ID do filme que vem do TMDB
+  userId String // A "chave estrangeira" que aponta para o User
+
+  // Relação: Este item pertence a UM usuário
+  // Conecta o 'userId' deste modelo ao 'id' do modelo User
+  user User @relation(fields: [userId], references: [id])
+
+  // Índice: Otimiza a busca por "esse usuário já salvou esse filme?"
+  @@index([userId, tmdbId])
+}
